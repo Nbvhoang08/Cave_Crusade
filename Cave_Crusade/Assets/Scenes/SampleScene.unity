@@ -759,9 +759,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
-  maxHp: 0
+  maxHp: 2
   currentState: 0
-  stateSequence: 00000000030000000100000002000000
+  stateSequence: 0000000003000000010000000200000002000000
+  currentAnimName: 
 --- !u!1 &210639551
 GameObject:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ namespace Script
         public Slider countdownSlider; // Slider đếm ngược
         private float turnDuration = 10f;  // Thời gian mỗi lượt (10 giây)
         private float turnTimer;  // Bộ đếm thời gian
-        private int currentTurn = 1;
+        private int currentTurn = 0;
         private GameManager gameManager;
         private void Awake()
         {
