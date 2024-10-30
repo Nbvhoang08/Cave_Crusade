@@ -12,7 +12,8 @@ namespace Script
         public float moveSpeed = 5f;
         public float attackRange = 2f;
         public float healAmount = 50f;
-
+        public Animator anim;
+        public String currentAnimName;
         [SerializeField] private PlayerState currentState = PlayerState.Idle;
         [SerializeField] private bool isAttacking = false;
         [SerializeField] private bool isDefending = false;
@@ -20,14 +21,19 @@ namespace Script
         
         [SerializeField] private float moveDistance = 5f; // Khoảng cách di chuyển cố định
         private Vector3 targetPosition;
+        public bool canDo;
         
-        public Animator anim;
-        public String currentAnimName;
-
+        
 
         void Start()
         {
-            anim = GetComponent<Animator>();
+            if (anim == null)
+            {
+                anim = GetComponent<Animator>();
+                Debug.Log(anim);
+            }
+            
+            
         }
 
         void Update()
@@ -50,30 +56,38 @@ namespace Script
                     HandleHealState();
                     break;
             }
+           
         }
+        // Hàm bắt đầu lượt mới
+        
+
 
         public void OnMoveButtonClick()
         {
             currentState = PlayerState.Walk;
             targetPosition = transform.position + Vector3.right * moveDistance; // Đặt vị trí đích
+            canDo = false;
         }
 
         public void OnAttackButtonClick()
         {
             currentState = PlayerState.Attack;
             isAttacking = true;
+            canDo = false;
         }
 
         public void OnDefendButtonClick()
         {
             currentState = PlayerState.Defend;
             isDefending = true;
+            canDo = false;
         }
 
         public void OnHealButtonClick()
         {
             currentState = PlayerState.Heal;
             isHealing = true;
+            canDo = false;
         }
 
         // Các phương thức xử lý trạng thái vẫn giữ nguyên như trước
@@ -82,21 +96,21 @@ namespace Script
         void HandleIdleState()
         {
             // Player is standing still
-            Debug.Log("Player Idle");
             ChangeAnim("Idle");
+            canDo = true;
         }
 
         void HandleWalkState()
         {
             // Move the player based on input
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveDistance);
-            
+            //Debug.Log(targetPosition);
+           
             // Kiểm tra nếu đã đến vị trí đích thì chuyển về trạng thái Idle
-            if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+            if (Vector2.Distance(transform.position, targetPosition) <= 0.001f)
             {
                 currentState = PlayerState.Idle;
-                Debug.Log("Player Idle");
-                ChangeAnim("Idle");
+               
             }
             else
             {
@@ -110,7 +124,7 @@ namespace Script
             if (isAttacking)
             {
                 // Check for enemies within attack range and apply damage
-                Debug.Log("Player ATK");
+       
                 // Chuyển về trạng thái Idle sau khi tấn công
                 isAttacking = false;
                 ChangeAnim("Atk");
@@ -124,7 +138,7 @@ namespace Script
             if (isDefending)
             {
                 // Reduce incoming damage
-                Debug.Log("Player DEF");
+    
                 // Chuyển về trạng thái Idle sau khi phòng thủ
                 isDefending = false;
                 ChangeAnim("Def");
@@ -134,16 +148,16 @@ namespace Script
 
         IEnumerator ResetState()
         {
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
             currentState = PlayerState.Idle;
+            
         }
         void HandleHealState()
         {
             // Perform heal logic
             if (isHealing)
             {
-                // Restore player's health by the heal amount
-                Debug.Log("Player HEAL");
+                // Restore player's health by the heal amoun
                 ChangeAnim("Heal");
                 // Chuyển về trạng thái Idle sau khi hồi máu
                 isHealing = false;
@@ -159,6 +173,7 @@ namespace Script
                 anim.SetTrigger(animName);
           
             }
+            
         }
     }
 }
