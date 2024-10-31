@@ -38,10 +38,14 @@ namespace Script
 
         private void HandleTurnChange(int newTurn)
         {
-            foreach (var enemy in enemies)
+            if (enemies.Count >= 0)
             {
-                enemy.NextState();
+                foreach (var enemy in enemies)
+                {
+                    enemy.NextState();
+                }
             }
+            
         }
 
 

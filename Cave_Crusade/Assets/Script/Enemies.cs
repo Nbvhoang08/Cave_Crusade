@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using TMPro;
 namespace Script
 {
     public enum EnemyState
@@ -21,42 +21,80 @@ namespace Script
         public EnemyState currentState ;
         public List<EnemyState> stateSequence = new List<EnemyState> {  };
         private int currentStateIndex = 0;
-        private Animator anim ;
+        public Animator anim ;
         public String currentAnimName;
+        public bool isInvincible;
+        public int attackDamage;
+        public int attackRange;
+        public bool attacking;
+        public GameObject PopUP;
+        public TMP_Text popUpText;
         public void Start()
         {
             hp = maxHp;
-            anim = GetComponent<Animator>();
+            if (anim == null)
+            {
+                anim = GetComponent<Animator>();
+            }
+           
             currentState = stateSequence[currentStateIndex];
         }
 
         public void Update()
         {
-            switch (currentState)
+            if (!isDead)
             {
-                case EnemyState.Idle:
-                    HandleIdleState();
-                    break;
-                case EnemyState.Def:
-                    HandleDefendState();
-                    break;
-                case EnemyState.PrepareAttack:
-                    HandlePrepareAttackState();
-                    break;
-                case EnemyState.Atk:
-                    HandleAttackState();
-                    break;
+                switch (currentState)
+                {
+                    case EnemyState.Idle:
+                        HandleIdleState();
+                        break;
+                    case EnemyState.Def:
+                        HandleDefendState();
+                        break;
+                    case EnemyState.PrepareAttack:
+                        HandlePrepareAttackState();
+                        break;
+                    case EnemyState.Atk:
+                        HandleAttackState();
+                        break;
+                }
             }
+            else
+            {
+                Death();
+            }
+            
 
 
         }
 
         public void TakeDamage(int damage)
         {
-            hp -= damage;
+            if (!isInvincible)
+            {
+                hp -= damage;
+                Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUpText.text ="- " +damage.ToString("D2");
+            }else
+            {
+                Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUpText.text = "Block";
+            }
+           
             
         }
 
+        private void Death()
+        { 
+            StartCoroutine(DesSpawn());
+        }
+
+        IEnumerator DesSpawn()
+        {
+            yield return new WaitForSeconds(1f);
+            Destroy(gameObject);
+        }
 
         public void ChangeAnim(string animName)
         {
@@ -70,7 +108,7 @@ namespace Script
 
         }
 
-        public void NextState()
+        public virtual void NextState()
         {
             currentStateIndex++;
             if (currentStateIndex >= stateSequence.Count)
@@ -81,39 +119,70 @@ namespace Script
         }
       
 
-        public void HandleIdleState()
+        public virtual void HandleIdleState()
         {
             ChangeAnim("idle");
+            isInvincible = false;
+            attacking = false;
         }
 
-        public void HandleDefendState()
+        public virtual void HandleDefendState()
         {
-            // Logic cho trạng thái Defend
-            Debug.Log("Enemy is Defending");
-            ChangeAnim("def");
+           isInvincible = true;
           
 
         }
 
-        public void HandlePrepareAttackState()
+        public virtual void HandlePrepareAttackState()
         {
-            // Logic cho trạng thái chuẩn bị tấn công
-            Debug.Log("Enemy is preparing to Attack");
-            ChangeAnim("prepare");
+            
+            
            
         }
 
-        public void HandleAttackState()
+        public virtual void HandleAttackState()
         {
-            Debug.Log("Enemy is Attacking");
-            ChangeAnim("atk");
-            StartCoroutine(ResetState());
-        }
-        IEnumerator ResetState()
-        {
-            yield return new WaitForSeconds(1);
-            currentState = EnemyState.Idle;
+            if (attacking)
+            {
+                StopAllCoroutines();
+                return;
+            }
+            StartCoroutine(ApplyDamge());
+            //ApplyDamageToPlayer();
         }
 
+        public virtual  void ApplyDamageToPlayer()
+        {
+           
+            
+            Vector2 start = transform.position;
+            Vector2 end = start + Vector2.left * attackRange;
+
+           
+
+            RaycastHit2D[] hits = Physics2D.LinecastAll(start, end);
+
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    hit.collider.GetComponent<Player>().TakeDamage(attackDamage);
+                    attacking = true; // Đánh dấu đã gây damage
+                    break; // Thoát khỏi vòng lặp sau khi gây damage
+                }
+            }
+
+        }
+     
+        public IEnumerator ResetState()
+        {
+            yield return new WaitForSeconds(1f);
+            currentState = EnemyState.Idle;
+        }
+        IEnumerator ApplyDamge()
+        {
+            yield return new WaitForSeconds(0.5f);
+            ApplyDamageToPlayer();
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using DG.Tweening;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace Script
 {
@@ -39,6 +40,8 @@ namespace Script
         private float turnTimer;  // Bộ đếm thời gian
         private int currentTurn = 0;
         private GameManager gameManager;
+        public Text HpText;
+        public Text Floor;
         private void Awake()
         {
             gameManager = FindObjectOfType<GameManager>();
@@ -61,7 +64,12 @@ namespace Script
             }
 
             gameManager.countTurn = currentTurn;
+            
+            // Hiển thị HP và maxHP theo định dạng 01/08
+            HpText.text = Player.Instance.hp.ToString("D2") + "/" + Player.Instance.maxHp.ToString("D2");
 
+            // Hiển thị tên của Scene hiện tại
+            Floor.text = SceneManager.GetActiveScene().name;
 
 
         }

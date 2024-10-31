@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 namespace Script
 {
    
@@ -8,10 +6,23 @@ namespace Script
     public class Skull : Enemies
     {
         
-        
-     
-       
-        
-        
+        public override void HandleAttackState()
+        {
+            base.HandleAttackState();
+            ChangeAnim("atk");
+            StartCoroutine(ResetState());
+        }
+
+        public override void HandlePrepareAttackState()
+        {
+            base.HandlePrepareAttackState();
+            ChangeAnim("prepare");
+        }
+
+        public override void HandleDefendState()
+        {
+            base.HandleDefendState();
+            ChangeAnim("def");
+        }
     }
 }
