@@ -71,20 +71,20 @@ namespace Script
 
         public void TakeDamage(int damage)
         {
+
+            //StartCoroutine(DelayDamage(damage));
             if (!isInvincible)
             {
                 hp -= damage;
-                Instantiate(PopUP, transform.position, Quaternion.identity);
-                popUpText.text ="- " +damage.ToString("D2");
-            }else
-            {
-                Instantiate(PopUP, transform.position, Quaternion.identity);
-                popUpText.text = "Block";
+                
             }
            
-            
+
+
         }
 
+
+       
         private void Death()
         { 
             StartCoroutine(DesSpawn());
@@ -144,17 +144,21 @@ namespace Script
         {
             if (attacking)
             {
-                StopAllCoroutines();
+                //StopAllCoroutines();
                 return;
             }
-            StartCoroutine(ApplyDamge());
+            else
+            {
+                StartCoroutine(ApplyDamge());
+                attacking = true;
+            }
+           
             //ApplyDamageToPlayer();
         }
 
         public virtual  void ApplyDamageToPlayer()
         {
-           
-            
+  
             Vector2 start = transform.position;
             Vector2 end = start + Vector2.left * attackRange;
 
@@ -167,7 +171,7 @@ namespace Script
                 if (hit.collider.CompareTag("Player"))
                 {
                     hit.collider.GetComponent<Player>().TakeDamage(attackDamage);
-                    attacking = true; // Đánh dấu đã gây damage
+                    //attacking = true; // Đánh dấu đã gây damage
                     break; // Thoát khỏi vòng lặp sau khi gây damage
                 }
             }
@@ -176,12 +180,13 @@ namespace Script
      
         public IEnumerator ResetState()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
             currentState = EnemyState.Idle;
         }
         IEnumerator ApplyDamge()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
+           
             ApplyDamageToPlayer();
         }
     }

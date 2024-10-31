@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Script
 {
@@ -19,7 +20,7 @@ namespace Script
         public String currentAnimName;
         public LayerMask enemyLayer;
         [SerializeField] private PlayerState currentState = PlayerState.Idle;
-        [SerializeField] private bool isAttacking = false;
+        [SerializeField] private bool isAttack = false;
         [SerializeField] private bool isDefending = false;
         [SerializeField] private bool isHealing = false;
 
@@ -29,7 +30,7 @@ namespace Script
         public GameObject PopUP;
         public TMP_Text popUpText;
         [SerializeField] private int _hp;
-
+        private Coroutine resetStateCoroutine;
         public int hp
         {
             get { return _hp; }
@@ -52,7 +53,7 @@ namespace Script
         }
 
         public int maxHp;
-
+       
 
         void Start()
         {
@@ -67,7 +68,7 @@ namespace Script
 
         void Update()
         {
-            Debug.Log(isDefending);
+           
             switch (currentState)
             {
                 case PlayerState.Idle:
@@ -86,65 +87,107 @@ namespace Script
                     HandleHealState();
                     break;
             }
-            Debug.Log(EnemyInFront());
+
+            if (isAttack)
+            {
+                Debug.Log("atk");
+            }
 
         }
         // Hàm bắt đầu lượt mới
 
         public void TakeDamage(int damage)
         {
-            StartCoroutine(DelayDamage(damage));
-        }
-
-        IEnumerator DelayDamage(int damage)
-        {
-            yield return new WaitForSeconds(0.5f);
             if (!isDefending)
             {
-                hp -= damage;   
+                hp -= damage;
                 Instantiate(PopUP, transform.position, Quaternion.identity);
-                popUpText.text ="- " +damage.ToString("D2");
-                
+                popUpText.text = "- " + damage.ToString("D2");
+
+
             }
             else
             {
                 Instantiate(PopUP, transform.position, Quaternion.identity);
                 popUpText.text = "Block";
                 SoundManager.Instance.PlayVFXSound(3);
+          
+
             }
+
         }
+        
         public void OnMoveButtonClick()
         {
             if (!EnemyInFront())
             {
+                StopCoroutine("ResetState");
                 currentState = PlayerState.Walk;
                 targetPosition = transform.position + Vector3.right * moveDistance; // Đặt vị trí đích
                 canDo = false;
+               
             }
         }
 
         public void OnAttackButtonClick()
         {
+            StopCoroutine("ResetState");
             currentState = PlayerState.Attack;
-            isAttacking = true;
+            isAttack = true;
             canDo = false;
+            ChangeAnim("Atk");
+
         }
 
         public void OnDefendButtonClick()
         {
+            StopCoroutine("ResetState");
             currentState = PlayerState.Defend;
             isDefending = true;
             canDo = false;
+           
         }
 
         public void OnHealButtonClick()
         {
+            StopCoroutine("ResetState");
             currentState = PlayerState.Heal;
             isHealing = true;
             canDo = false;
+            
+        }
+        public IEnumerator LoadNextScene()
+        {
+            // Thêm hiệu ứng chờ đợi hoặc hiệu ứng chuyển cảnh tại đây nếu cần
+            yield return new WaitForSeconds(1f); // Chờ 1 giây trước khi chuyển cảnh
+
+            // Chuyển sang cảnh tiếp theo
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            Time.timeScale = 1;
+
+            // Đảm bảo rằng cảnh mới đã được tải hoàn toàn trước khi di chuyển Player
+            yield return new WaitForSeconds(0.1f); // Chờ một chút để cảnh mới tải xong
+
+            // Di chuyển Player đến vị trí mới
+            transform.position = new Vector3(0,-1,0);
         }
 
-        // Các phương thức xử lý trạng thái vẫn giữ nguyên như trước
+        public IEnumerator LoadFirtSence()
+        {
+            // Chờ 1 giây trước khi load scene (tùy chỉnh thời gian nếu muốn)
+            yield return new WaitForSeconds(1f);
+
+            // Load scene đầu tiên (index 0)
+            SceneManager.LoadScene(0);
+            yield return new WaitForSeconds(0.1f); // Chờ một chút để cảnh mới tải xong
+
+            // Di chuyển Player đến vị trí mới
+            transform.position = new Vector3(0, -1, 0);
+
+        }
+
+
+
 
 
         void HandleIdleState()
@@ -152,7 +195,6 @@ namespace Script
             // Player is standing still
             ChangeAnim("Idle");
             isDefending = false;
-            isAttacking = false;
             canDo = true;
         }
 
@@ -184,7 +226,7 @@ namespace Script
             }
         }
 
-     bool EnemyInFront()
+        bool EnemyInFront()
         {
             // Logic để kiểm tra nếu có kẻ địch trước mặt (sử dụng Raycast hoặc các phương pháp khác)
             RaycastHit2D hit = Physics2D.Raycast(transform.position,  Vector2.right, dectectRange, enemyLayer); // Sử dụng Raycast để kiểm tra phía trước
@@ -208,17 +250,19 @@ namespace Script
 
         void HandleAttackState()
         {
+            
             // Perform attack logic
-            if (isAttacking)
+            if (isAttack)
             {
                 // Check for enemies within attack range and apply damage
                 StartCoroutine(ApplyDamge());
                 SoundManager.Instance.PlayVFXSound(0);
                 // Chuyển về trạng thái Idle sau khi tấn công
-                isAttacking = false;
-                ChangeAnim("Atk");
-                StartCoroutine(ResetState());
+                isAttack = false;
+                isDefending = false;    
+
             }
+            
         }
 
         void ApplyDamageToEnemies()
@@ -230,6 +274,7 @@ namespace Script
                 if (enemy.CompareTag("Enemy"))
                 {
                     enemy.GetComponent<Enemies>().TakeDamage(attackDamage);
+                    
                 }
             }
 
@@ -237,26 +282,29 @@ namespace Script
         }
 
         void HandleDefendState()
-            {
+        {
                 // Perform defend logic
-                if (isDefending)
-                {
-                    ChangeAnim("Def");
-                }
+            if (isDefending)
+            {
+                ChangeAnim("Def");
+                
             }
+        }
         IEnumerator ApplyDamge()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
             ApplyDamageToEnemies();
         }
-            IEnumerator ResetState()
-            {
-                yield return new WaitForSeconds(2f);
-                currentState = PlayerState.Idle;
+        public void  ResetState()
+        {
 
-            }
+            currentState = PlayerState.Idle;
+            canDo = true;  // Đảm bảo người chơi có thể thực hiện hành động tiếp theo
+         
 
-            void HandleHealState()
+        }
+
+        void HandleHealState()
             {
                 // Perform heal logic
                 if (isHealing)
@@ -266,8 +314,9 @@ namespace Script
                     // Chuyển về trạng thái Idle sau khi hồi máu
                     SoundManager.Instance.PlayVFXSound(2);
                     isHealing = false;
+                    isDefending = false;
                     hp += 1;
-                    StartCoroutine(ResetState());
+                   
                 }
             }
 
@@ -281,8 +330,16 @@ namespace Script
                 }
 
             }
-        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("Gate"))
+            {
+                StartCoroutine(LoadNextScene());
+            }
         }
+
+    }
+
     
         
     }

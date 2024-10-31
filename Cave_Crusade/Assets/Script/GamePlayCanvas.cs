@@ -39,7 +39,7 @@ namespace Script
         private float turnDuration = 10f;  // Thời gian mỗi lượt (10 giây)
         private float turnTimer;  // Bộ đếm thời gian
         private int currentTurn = 0;
-        private GameManager gameManager;
+        [SerializeField]private GameManager gameManager;
         public Text HpText;
         public Text Floor;
         private void Awake()
@@ -57,6 +57,7 @@ namespace Script
 
         private void Update()
         {
+            
             if (isCountingDown && turnTimer > 0)
             {
                 turnTimer -= Time.deltaTime;
@@ -70,6 +71,12 @@ namespace Script
 
             // Hiển thị tên của Scene hiện tại
             Floor.text = SceneManager.GetActiveScene().name;
+            if (gameManager == null)
+            {
+                gameManager = FindObjectOfType<GameManager>();
+            }
+
+            
 
 
         }
@@ -99,7 +106,7 @@ namespace Script
 
         IEnumerator ResetCountdown()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             if (Player.Instance.canDo)
             {
                 StartNewTurn();
@@ -107,9 +114,9 @@ namespace Script
             }
             else
             {
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(0.5f);
                 StartNewTurn();
-                
+
             }
 
         }
@@ -175,7 +182,7 @@ namespace Script
     private void MoveButton()
     {
         Player.Instance.OnMoveButtonClick();
-        Debug.Log("move");
+    
         EndTurn();
     }
 

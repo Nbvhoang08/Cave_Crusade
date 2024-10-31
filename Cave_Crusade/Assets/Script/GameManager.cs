@@ -13,7 +13,7 @@ namespace Script
 
     public class GameManager : MonoBehaviour
     {
-        private int _countTurn;
+        [SerializeField]private int _countTurn;
         public int countTurn
         {
             get { return _countTurn; }
@@ -34,6 +34,7 @@ namespace Script
         private void Awake()
         {
             OnVariableChange += HandleTurnChange;
+            Debug.Log("ctrl");
         }
 
         private void HandleTurnChange(int newTurn)

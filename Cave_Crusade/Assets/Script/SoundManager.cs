@@ -18,6 +18,7 @@ namespace Script
     [Header("Volume Settings")]
     [SerializeField][Range(0f, 1f)] private float musicVolume = 0.3f;
     [SerializeField][Range(0f, 1f)] private float sfxVolume = 0.5f;
+ 
     public bool TurnOn = true;
 
 
