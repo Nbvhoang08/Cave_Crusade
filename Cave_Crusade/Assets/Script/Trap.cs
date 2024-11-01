@@ -10,7 +10,7 @@ namespace Script
         {
             if (isActive)
             {
-                Debug.Log("Trap");
+            
                 base.NextState();
             }
                 
@@ -31,11 +31,8 @@ namespace Script
         }
         public override void ApplyDamageToPlayer()
         {
-            if (attacking)
-            {
-                return;
-            }
-
+            
+            Debug.Log("atk");
             Vector2 start = transform.position;
             Vector2 end = start + Vector2.up * attackRange; // Thay đổi hướng Raycast sang bên trên
             Debug.DrawLine(start, end, Color.green, 1f); // Thay đổi màu để dễ nhận biết hơn
@@ -50,6 +47,9 @@ namespace Script
                 }
             }
         }
+
+
+
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.CompareTag("Player"))

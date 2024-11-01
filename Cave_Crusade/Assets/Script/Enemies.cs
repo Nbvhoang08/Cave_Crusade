@@ -156,7 +156,7 @@ namespace Script
             //ApplyDamageToPlayer();
         }
 
-        public virtual  void ApplyDamageToPlayer()
+        public virtual void ApplyDamageToPlayer()
         {
   
             Vector2 start = transform.position;
@@ -183,10 +183,10 @@ namespace Script
             yield return new WaitForSeconds(2f);
             currentState = EnemyState.Idle;
         }
-        IEnumerator ApplyDamge()
+        public IEnumerator ApplyDamge()
         {
             yield return new WaitForSeconds(0.1f);
-           
+            Debug.Log("aaa");
             ApplyDamageToPlayer();
         }
     }

@@ -65,6 +65,7 @@ namespace Script
             _hp = maxHp;
 
         }
+        
 
         void Update()
         {
@@ -167,7 +168,7 @@ namespace Script
 
             // Đảm bảo rằng cảnh mới đã được tải hoàn toàn trước khi di chuyển Player
             yield return new WaitForSeconds(0.1f); // Chờ một chút để cảnh mới tải xong
-
+           
             // Di chuyển Player đến vị trí mới
             transform.position = new Vector3(0,-1,0);
         }
@@ -180,7 +181,7 @@ namespace Script
             // Load scene đầu tiên (index 0)
             SceneManager.LoadScene(0);
             yield return new WaitForSeconds(0.1f); // Chờ một chút để cảnh mới tải xong
-
+            hp = maxHp;
             // Di chuyển Player đến vị trí mới
             transform.position = new Vector3(0, -1, 0);
 

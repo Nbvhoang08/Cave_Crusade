@@ -5,6 +5,7 @@ using System.Collections;
 using DG.Tweening;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 
 namespace Script
 {
@@ -36,12 +37,13 @@ namespace Script
         [SerializeField] private List<GameObject> activeButtons = new List<GameObject>();
         private bool isCountingDown = true; 
         public Slider countdownSlider; // Slider đếm ngược
-        private float turnDuration = 10f;  // Thời gian mỗi lượt (10 giây)
-        private float turnTimer;  // Bộ đếm thời gian
+        public float turnDuration = 10f;  // Thời gian mỗi lượt (10 giây)
+        public float turnTimer;  // Bộ đếm thời gian
         private int currentTurn = 0;
         [SerializeField]private GameManager gameManager;
         public Text HpText;
         public Text Floor;
+        private bool hasLost = false;
         private void Awake()
         {
             gameManager = FindObjectOfType<GameManager>();
@@ -76,7 +78,14 @@ namespace Script
                 gameManager = FindObjectOfType<GameManager>();
             }
 
-            
+            if(!hasLost && (Player.Instance.hp ==0 || turnTimer <=0))
+            {
+
+                UIManager.Instance.OpenUI<LoseCanvas>();
+                hasLost = true;     
+                Debug.Log("?");
+                return;
+            }
 
 
         }
