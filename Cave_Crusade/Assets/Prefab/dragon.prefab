@@ -126,7 +126,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: 4b342ed0f626248428ca9b4b78ca0dca, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: 4b342ed0f626248428ca9b4b78ca0dca, type: 3}
       propertyPath: m_TagString
@@ -778,7 +778,7 @@ MonoBehaviour:
   hp: 0
   maxHp: 1
   currentState: 0
-  stateSequence: 0000000001000000
+  stateSequence: 000000000300000001000000
   anim: {fileID: 0}
   currentAnimName: 
   isInvincible: 0
