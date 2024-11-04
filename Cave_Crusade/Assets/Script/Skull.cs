@@ -1,7 +1,6 @@
-
+using UnityEngine;
 namespace Script
 {
-   
     
     public class Skull : Enemies
     {
@@ -10,6 +9,7 @@ namespace Script
         {
             base.HandleAttackState();
             ChangeAnim("atk");
+  
             StartCoroutine(ResetState());
         }
 

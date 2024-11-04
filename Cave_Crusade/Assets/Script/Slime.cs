@@ -1,3 +1,4 @@
+using UnityEngine;
 namespace Script
 {
     public class Slime: Enemies
@@ -5,6 +6,7 @@ namespace Script
         public override void HandleAttackState()
         {
             base.HandleAttackState();
+            //ebug.Log("Slime");
             ChangeAnim("atk");
             StartCoroutine(ResetState());
         }

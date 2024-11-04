@@ -144,13 +144,13 @@ namespace Script
         {
             if (attacking)
             {
-                //StopAllCoroutines();
                 return;
             }
             else
             {
                 StartCoroutine(ApplyDamge());
                 attacking = true;
+                Debug.Log("attacking");
             }
            
             //ApplyDamageToPlayer();
@@ -162,17 +162,23 @@ namespace Script
             Vector2 start = transform.position;
             Vector2 end = start + Vector2.left * attackRange;
 
-           
+         
 
             RaycastHit2D[] hits = Physics2D.LinecastAll(start, end);
-
+            Debug.Log(hits.Length);
             foreach (RaycastHit2D hit in hits)
-            {
+            {   
+                
                 if (hit.collider.CompareTag("Player"))
                 {
                     hit.collider.GetComponent<Player>().TakeDamage(attackDamage);
                     //attacking = true; // Đánh dấu đã gây damage
+                    Debug.Log(hit.collider.name);
                     break; // Thoát khỏi vòng lặp sau khi gây damage
+                }
+                else
+                {
+                    Debug.Log(hit.collider.name);
                 }
             }
 
@@ -186,7 +192,6 @@ namespace Script
         public IEnumerator ApplyDamge()
         {
             yield return new WaitForSeconds(0.1f);
-            Debug.Log("aaa");
             ApplyDamageToPlayer();
         }
     }

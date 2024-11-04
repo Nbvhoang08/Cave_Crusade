@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7264824445659566221}
   - component: {fileID: 4746523415570528067}
   - component: {fileID: 2100557178064576014}
+  - component: {fileID: 6578892566651741324}
   m_Layer: 5
   m_Name: Atk
   m_TagString: Untagged
@@ -133,6 +134,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &6578892566651741324
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3577445970032504261}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8450501499155454483
 GameObject:
   m_ObjectHideFlags: 0
