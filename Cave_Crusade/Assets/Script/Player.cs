@@ -120,7 +120,7 @@ namespace Script
         
         public void OnMoveButtonClick()
         {
-            if (!EnemyInFront())
+            if (!EnemyInFront() && canDo)
             {
                 StopCoroutine("ResetState");
                 currentState = PlayerState.Walk;
@@ -132,29 +132,41 @@ namespace Script
 
         public void OnAttackButtonClick()
         {
-            StopCoroutine("ResetState");
-            currentState = PlayerState.Attack;
-            isAttack = true;
-            canDo = false;
-            ChangeAnim("Atk");
+            if(canDo)
+            {
+                StopCoroutine("ResetState");
+                currentState = PlayerState.Attack;
+                isAttack = true;
+                canDo = false;
+                ChangeAnim("Atk");
+            }
+            
 
         }
 
         public void OnDefendButtonClick()
         {
-            StopCoroutine("ResetState");
-            currentState = PlayerState.Defend;
-            isDefending = true;
-            canDo = false;
+            if(canDo)
+            {
+                StopCoroutine("ResetState");
+                currentState = PlayerState.Defend;
+                isDefending = true;
+                //canDo = false;
+            }
+            
            
         }
 
         public void OnHealButtonClick()
         {
-            StopCoroutine("ResetState");
-            currentState = PlayerState.Heal;
-            isHealing = true;
-            canDo = false;
+            if(canDo)
+            {
+                StopCoroutine("ResetState");
+                currentState = PlayerState.Heal;
+                isHealing = true;
+                canDo = false;
+            }
+            
             
         }
         public IEnumerator LoadNextScene()
@@ -223,6 +235,7 @@ namespace Script
             else
             {
                 ChangeAnim("Walk");
+                
                
             }
         }
@@ -253,7 +266,7 @@ namespace Script
         {
             
             // Perform attack logic
-            if (isAttack)
+            if (isAttack) 
             {
                 // Check for enemies within attack range and apply damage
                 StartCoroutine(ApplyDamge());

@@ -40,7 +40,7 @@ namespace Script
         [SerializeField] private List<GameObject> activeButtons = new List<GameObject>();
         [SerializeField] private GameManager gameManager;
         [SerializeField] private GameManager previousGameManager;
-
+        [SerializeField] private bool canClick = true;
         private bool isCountingDown = true;
         public Slider countdownSlider; // Slider đếm ngược
         public float turnDuration = 10f; // Thời gian mỗi lượt (10 giây)
@@ -64,6 +64,7 @@ namespace Script
             CheckGameManagerChange();
             countdownSlider.maxValue = turnDuration;
             StartNewTurn();
+            canClick = true;
         }
 
         private void Update()
@@ -216,27 +217,46 @@ namespace Script
 
         private void AtkButton()
         {
-            Player.Instance.OnAttackButtonClick();
-            EndTurn();
+            if(canClick)
+            {
+                Player.Instance.OnAttackButtonClick();
+                StartCoroutine(DisableClickTemporarily()); 
+                EndTurn();
+            }
+            
         }
 
         private void DefButton()
         {
-            Player.Instance.OnDefendButtonClick();
-            EndTurn();
+            if(canClick)
+            {
+                Player.Instance.OnDefendButtonClick();
+                EndTurn();
+                StartCoroutine(DisableClickTemporarily()); 
+            }
+            
         }
 
         private void HealButton()
         {
             Player.Instance.OnHealButtonClick();
             EndTurn();
+                
+            
+            
         }
 
         private void MoveButton()
         {
-            Player.Instance.OnMoveButtonClick();
-
-            EndTurn();
+            if(canClick)
+            {
+                Player.Instance.OnMoveButtonClick();
+              
+                StartCoroutine(DisableClickTemporarily()); 
+                EndTurn();
+                
+            }
+            
         }
 
         private void SpawnInitialButtons()
@@ -305,10 +325,18 @@ namespace Script
 
         private void OnButtonClick(GameObject clickedButton)
         {
-            activeButtons.Remove(clickedButton);
-            StartCoroutine(AnimateButtonDespawn(clickedButton));
+            if (canClick)
+            {  
+                StartCoroutine(DisableClickTemporarily()); 
+            }
+            activeButtons.Remove(clickedButton); 
+            StartCoroutine(AnimateButtonDespawn(clickedButton)); 
         }
-
+        private IEnumerator DisableClickTemporarily() { 
+            canClick = false; // Vô hiệu hóa các button 
+            yield return new WaitForSeconds(1f); // Đợi 1 giây 
+            canClick = true; // Kích hoạt lại các button
+        }
         private IEnumerator AnimateButtonDespawn(GameObject button)
         {
             float elapsed = 0;
@@ -341,20 +369,16 @@ namespace Script
 
             button.SetActive(false);
             StartCoroutine(RepositionActiveButtons());
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.05f);
             SpawnButtonAtPosition(3);
-            Debug.Log("âsas");
+           
         }
 
         private IEnumerator RepositionActiveButtons()
         {
             if (activeButtons.Count == 0) yield break;
 
-            // Chỉ giữ lại tối đa 4 phần tử
-            // while (activeButtons.Count > 4)
-            // {
-            //     activeButtons.RemoveAt(activeButtons.Count - 1);
-            // }
+            
 
             List<(GameObject button, Vector2 startPos, Vector2 targetPos)> buttonPositions =
                 new List<(GameObject, Vector2, Vector2)>();
