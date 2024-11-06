@@ -162,8 +162,8 @@ MonoBehaviour:
   attackDamage: 1
   attackRange: 2
   attacking: 0
-  PopUP: {fileID: 0}
-  popUpText: {fileID: 0}
+  PopUP: {fileID: 5194553087327115819, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
+  popUpText: {fileID: 2897441219051805674, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
 --- !u!61 &1542661211351556974
 BoxCollider2D:
   m_ObjectHideFlags: 0

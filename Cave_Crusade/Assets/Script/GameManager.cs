@@ -34,7 +34,7 @@ namespace Script
         private void Awake()
         {
             OnVariableChange += HandleTurnChange;
-            Debug.Log("ctrl");
+        
         }
 
         private void HandleTurnChange(int newTurn)

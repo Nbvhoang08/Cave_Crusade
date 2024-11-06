@@ -76,7 +76,13 @@ namespace Script
             if (!isInvincible)
             {
                 hp -= damage;
-                
+                GameObject popUp = Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUp.GetComponent<TextMeshPro>().text = "- " + damage.ToString("D2");
+            }else
+            {
+                GameObject popUp = Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUp.GetComponent<TextMeshPro>().text = "Block";
+                SoundManager.Instance.PlayVFXSound(3);
             }
            
 
@@ -150,7 +156,7 @@ namespace Script
             {
                 StartCoroutine(ApplyDamge());
                 attacking = true;
-                Debug.Log("attacking");
+       
             }
            
             //ApplyDamageToPlayer();

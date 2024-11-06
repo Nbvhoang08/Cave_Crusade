@@ -102,16 +102,20 @@ namespace Script
             if (!isDefending)
             {
                 hp -= damage;
-                Instantiate(PopUP, transform.position, Quaternion.identity);
-                popUpText.text = "- " + damage.ToString("D2");
-
+                GameObject popUp = Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUp.GetComponent<TextMeshPro>().text = "- " + damage.ToString("D2");
+            
+                Debug.Log(damage);
 
             }
             else
             {
-                Instantiate(PopUP, transform.position, Quaternion.identity);
-                popUpText.text = "Block";
+                //Instantiate(PopUP, transform.position, Quaternion.identity);
+                //popUpText.text = "Block";
+                GameObject popUp = Instantiate(PopUP, transform.position, Quaternion.identity);
+                popUp.GetComponent<TextMeshPro>().text = "Block";
                 SoundManager.Instance.PlayVFXSound(3);
+                Debug.Log("Defend");
           
 
             }
@@ -120,7 +124,7 @@ namespace Script
         
         public void OnMoveButtonClick()
         {
-            if (!EnemyInFront() && canDo)
+            if (!EnemyInFront() && canDo )
             {
                 StopCoroutine("ResetState");
                 currentState = PlayerState.Walk;
@@ -218,7 +222,8 @@ namespace Script
             // Kiểm tra nếu có kẻ địch trước mặt khi đang đứng yên
             if ( EnemyInFront())
             {
-                ChangeAnim("Idle");
+                //ChangeAnim("Idle");
+                currentState = PlayerState.Idle;
                 return; // Không di chuyển
             }
 

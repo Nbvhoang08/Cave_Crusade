@@ -32,7 +32,7 @@ namespace Script
         public override void ApplyDamageToPlayer()
         {
             
-            Debug.Log("atk");
+           
             Vector2 start = transform.position;
             Vector2 end = start + Vector2.up * attackRange; // Thay đổi hướng Raycast sang bên trên
             Debug.DrawLine(start, end, Color.green, 1f); // Thay đổi màu để dễ nhận biết hơn
@@ -43,6 +43,7 @@ namespace Script
                 {
                     hit.collider.GetComponent<Player>().TakeDamage(attackDamage);
                     attacking = true; // Đánh dấu đã gây damage
+                    Debug.Log("Damge");
                     break; // Thoát khỏi vòng lặp sau khi gây damage
                 }
             }

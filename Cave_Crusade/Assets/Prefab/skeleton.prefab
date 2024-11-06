@@ -298,7 +298,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8653719598885068355, guid: 9a5c832cb030f4abbb4ad681cf7a47e7, type: 3}
       propertyPath: m_Name
-      value: skeleton 1
+      value: skeleton
       objectReference: {fileID: 0}
     - target: {fileID: -8653719598885068355, guid: 9a5c832cb030f4abbb4ad681cf7a47e7, type: 3}
       propertyPath: m_Layer
@@ -877,7 +877,7 @@ MonoBehaviour:
   isInvincible: 0
   attackDamage: 1
   attackRange: 3
-  attacking: 0
+  attacking: 1
   PopUP: {fileID: 5194553087327115819, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
   popUpText: {fileID: 2897441219051805674, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
 --- !u!61 &3798021405769176491

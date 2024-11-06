@@ -785,8 +785,8 @@ MonoBehaviour:
   attackDamage: 3
   attackRange: 6
   attacking: 0
-  PopUP: {fileID: 0}
-  popUpText: {fileID: 0}
+  PopUP: {fileID: 5194553087327115819, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
+  popUpText: {fileID: 2897441219051805674, guid: dff542ef95ae94148a29db9f10c469d7, type: 3}
   Fireball: {fileID: 5178793729918024682, guid: 2d3a19f897d76432892f582a5db787fc, type: 3}
   fireballSpacing: 2
   fireballLifetime: 1

@@ -1553,13 +1553,13 @@ MonoBehaviour:
     quantity: 2
   - type: 1
     buttonPrefab: {fileID: 957242246866045750, guid: e10b63e9b42e84ba49d65e90ee9753cf, type: 3}
-    quantity: 2
+    quantity: 0
   - type: 2
     buttonPrefab: {fileID: 8820732343123407295, guid: 718996ee88ee24477971105cf6572c50, type: 3}
     quantity: 2
   - type: 3
     buttonPrefab: {fileID: 4880445511606169829, guid: 3df49ea4e22954098a42124866a0f4f9, type: 3}
-    quantity: 4
+    quantity: 2
   enemies:
   - {fileID: 578423578}
 --- !u!1 &923960608

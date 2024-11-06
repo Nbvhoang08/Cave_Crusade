@@ -56,7 +56,7 @@ namespace Script
 
 
             buttonConfigs = gameManager.buttonConfigs;
-            Debug.Log("game manager has been set");
+          
         }
 
         private void Start()
@@ -84,6 +84,7 @@ namespace Script
 
             if (!hasLost && (Player.Instance.hp == 0 || turnTimer <= 0))
             {
+                Debug.Log(Player.Instance.hp);
                 UIManager.Instance.OpenUI<LoseCanvas>();
                 hasLost = true;
                 return;
@@ -101,7 +102,7 @@ namespace Script
             // Kiểm tra xem GameManager có thay đổi không
             if (gameManager != previousGameManager)
             {
-                Debug.Log("GameManager changed - Reinitializing buttons");
+                
                 ClearAllButtons();
                 InitializeButtonPool();
                 SpawnInitialButtons();
